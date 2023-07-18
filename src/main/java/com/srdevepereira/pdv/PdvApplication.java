@@ -1,13 +1,13 @@
-package com.srdevepereira.springbootwebpdv;
+package com.srdevepereira.pdv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootWebPdvApplication {
+public class PdvApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootWebPdvApplication.class, args);
+		SpringApplication.run(PdvApplication.class, args);
 	}
 
 }
