@@ -103,6 +103,16 @@ public class SaleService {
             itemSale.setProduct(product);
             itemSale.setQuantity(item.getQuantity());
 
+            if(product.getQuantity() == 0){
+                throw new IllegalArgumentException();
+            } else if (product.getQuantity() < item.getQuantity()) {
+                throw new IllegalArgumentException();
+            }
+
+            int total = product.getQuantity() - item.getQuantity();
+            product.setQuantity(total);
+            productRepository.save(product);
+
             return itemSale;
         }).collect(Collectors.toList());
     }
