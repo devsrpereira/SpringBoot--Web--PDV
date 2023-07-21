@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,9 +21,10 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping() // retorna todos os usuarios cadastrados
-    public ResponseEntity getAll(){
-        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity getAll() {
+        ResponseEntity<List<User>> entity = new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+        return entity;
     }
 
     @PostMapping() // criar novo usuario

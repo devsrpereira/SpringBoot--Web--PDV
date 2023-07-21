@@ -8,6 +8,8 @@ import com.srdevepereira.pdv.entity.ItemSale;
 import com.srdevepereira.pdv.entity.Product;
 import com.srdevepereira.pdv.entity.Sale;
 import com.srdevepereira.pdv.entity.User;
+import com.srdevepereira.pdv.exception.InvalidOperationException;
+import com.srdevepereira.pdv.exception.NoItemException;
 import com.srdevepereira.pdv.repository.ItemSaleRepository;
 import com.srdevepereira.pdv.repository.ProductRepository;
 import com.srdevepereira.pdv.repository.SaleRepository;
@@ -72,18 +74,19 @@ public class SaleService {
 
     @Transactional
     public Long save(SaleDTO sale){
-        User user = userRepository.findById(sale.getUserId()).get();
+        User user = userRepository.findById(sale.getUserId())
+                .orElseThrow(()-> new NoItemException("Usuario não encontrado."));
 
-        Sale newSale = new Sale();
-        newSale.setUser(user);
-        newSale.setDate(LocalDate.now());
-        List<ItemSale> items = getItemSale(sale.getItems());
+            Sale newSale = new Sale();
+            newSale.setUser(user);
+            newSale.setDate(LocalDate.now());
+            List<ItemSale> items = getItemSale(sale.getItems());
 
-        newSale = saleRepository.save(newSale);
+            newSale = saleRepository.save(newSale);
 
-        saveItemSale(items, newSale);
+            saveItemSale(items, newSale);
 
-        return newSale.getId();
+            return newSale.getId();
     }
 
     private void saveItemSale(List<ItemSale> items, Sale newSale) {
@@ -95,6 +98,10 @@ public class SaleService {
 
     private List<ItemSale> getItemSale(List<ProductDTO> products){
 
+        if(products.isEmpty()){
+            throw new NoItemException("Não é possivel registrar uma venda sem produtos.");
+        }
+
         return products.stream().map(item -> {
 
             Product product = productRepository.getReferenceById(item.getProductId());
@@ -104,9 +111,13 @@ public class SaleService {
             itemSale.setQuantity(item.getQuantity());
 
             if(product.getQuantity() == 0){
-                throw new IllegalArgumentException();
+                throw new NoItemException(String.format("O produto (%s) está indisponivel no momento.",product.getDescription()));
             } else if (product.getQuantity() < item.getQuantity()) {
-                throw new IllegalArgumentException();
+                throw new InvalidOperationException(String.format(
+                        "Disponivel  em estoque apenas (%s) unid. do produto (%s)," +
+                                "favor revisar o pedido.",
+                        product.getQuantity(),
+                        product.getDescription()));
             }
 
             int total = product.getQuantity() - item.getQuantity();
@@ -116,4 +127,12 @@ public class SaleService {
             return itemSale;
         }).collect(Collectors.toList());
     }
+
+    public SaleInfoDTO getByID(Long id){
+        Sale sale = saleRepository.findById(id)
+                .orElseThrow(()-> new NoItemException("Venda não encontrada."));
+        return getSaleInfo(sale);
+    }
+
+
 }
