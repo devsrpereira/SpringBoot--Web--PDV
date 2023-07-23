@@ -2,10 +2,7 @@ package com.srdevepereira.pdv.controller;
 
 import com.srdevepereira.pdv.dto.ResponseDTO;
 import com.srdevepereira.pdv.dto.SaleDTO;
-import com.srdevepereira.pdv.exception.InvalidOperationException;
-import com.srdevepereira.pdv.exception.NoItemException;
 import com.srdevepereira.pdv.service.SaleService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,11 +25,11 @@ public class SaleController {
 
     @GetMapping("{id}")
     public ResponseEntity getById(@PathVariable Long id){
-        try{
+        try {
             return new ResponseEntity<>(saleService.getByID(id), HttpStatus.OK);
         }
-        catch (NoItemException | InvalidOperationException error){
-            return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
+        catch (Exception error){
+            return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -41,9 +38,6 @@ public class SaleController {
         try {
             Long id = saleService.save(saleDTO);
             return new ResponseEntity<>(new ResponseDTO("Venda realizada com sucesso "), HttpStatus.CREATED);
-        }
-        catch (NoItemException | InvalidOperationException error){
-            return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
         }
         catch (Exception error){
             return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -40,9 +40,6 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
         }
-        catch (NoItemException error){
-            return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.BAD_REQUEST);
-        }
         catch (Exception error){
             return new ResponseEntity<>(new ResponseDTO(error.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
