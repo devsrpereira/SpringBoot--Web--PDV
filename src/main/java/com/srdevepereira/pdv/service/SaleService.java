@@ -105,7 +105,8 @@ public class SaleService {
 
         return products.stream().map(item -> {
 
-            Product product = productRepository.getReferenceById(item.getProductId());
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(()-> new NoItemException("Indentificação incorreta de produto."));
 
             ItemSale itemSale = new ItemSale();
             itemSale.setProduct(product);
