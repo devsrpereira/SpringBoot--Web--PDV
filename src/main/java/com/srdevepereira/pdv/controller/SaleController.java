@@ -3,6 +3,7 @@ package com.srdevepereira.pdv.controller;
 import com.srdevepereira.pdv.dto.ResponseDTO;
 import com.srdevepereira.pdv.dto.SaleDTO;
 import com.srdevepereira.pdv.service.SaleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class SaleController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@RequestBody SaleDTO saleDTO){
+    public ResponseEntity post(@Valid @RequestBody SaleDTO saleDTO){
         try {
             Long id = saleService.save(saleDTO);
             return new ResponseEntity<>(new ResponseDTO("Venda realizada com sucesso "), HttpStatus.CREATED);

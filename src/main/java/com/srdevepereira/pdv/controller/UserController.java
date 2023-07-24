@@ -4,6 +4,7 @@ import com.srdevepereira.pdv.dto.ResponseDTO;
 import com.srdevepereira.pdv.entity.User;
 import com.srdevepereira.pdv.exception.NoItemException;
 import com.srdevepereira.pdv.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController {
     public ResponseEntity getAll() {return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);}
 
     @PostMapping() // criar novo usuario
-    public ResponseEntity post(@RequestBody User user){
+    public ResponseEntity post(@Valid @RequestBody User user){
         try{
             user.setEnabled(true);
             return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping() //atualiza usuarios já cadastrados
-    public ResponseEntity put(@RequestBody User user){
+    public ResponseEntity put(@Valid @RequestBody User user){
         try {
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
         }
