@@ -13,6 +13,6 @@ public class SaleDTO {
 
     private Long userId;
 
-    List<ProductDTO> items;
+    List<ProductSaleDTO> items;
 
 }

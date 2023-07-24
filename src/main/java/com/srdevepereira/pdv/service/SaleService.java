@@ -1,6 +1,6 @@
 package com.srdevepereira.pdv.service;
 
-import com.srdevepereira.pdv.dto.ProductDTO;
+import com.srdevepereira.pdv.dto.ProductSaleDTO;
 import com.srdevepereira.pdv.dto.ProductInfoDTO;
 import com.srdevepereira.pdv.dto.SaleDTO;
 import com.srdevepereira.pdv.dto.SaleInfoDTO;
@@ -101,7 +101,7 @@ public class SaleService {
         }
     }
 
-    private List<ItemSale> getItemSale(List<ProductDTO> products){
+    private List<ItemSale> getItemSale(List<ProductSaleDTO> products){
 
         if(products.isEmpty()){
             throw new NoItemException("Não é possivel registrar uma venda sem produtos.");
